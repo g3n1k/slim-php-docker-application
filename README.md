@@ -23,7 +23,7 @@ the code
  `-v` folder to mount in docker  
  `php /app/hello.php` execute php to file hello.php  
 
-## lets play the code
+## lets download slim framework
 we will using slim as framework, install with docker composer
 ````
 docker run --rm -v $(pwd)/app:/app composer:latest require slim/slim "^3.0"
@@ -63,3 +63,48 @@ Generating autoload files
 ````
 this will download slim framework with his depedency
 
+## what we will create ?
+
+we will fetch data from [https://openweathermap.org/](https://openweathermap.org/) to get latest wheather  
+you can register and get the key api there to using in app, but its need couple hours to activate  
+
+## 00. clone the code
+````
+git clone https://github.com/g3n1k/slim-php-docker-application.git
+````
+
+## 01. test router
+slim framework feels like echo framework in golang, first must declare the router  
+now lets change our branch to `01_test_router`
+````
+git checkout 01_test_router
+````
+and see index.file
+
+````
+<?php require 'vendor/autoload.php';
+
+// Initiate the APP object
+$app = new \Slim\App();
+
+// Declare routes
+$app->get('location/{id}', function ($req, $res, $args){
+    return $res->withStatus(200)->write("Location {$args['id']}");
+});
+
+$app->delete('location/{id}', function ($req, $res, $args){
+    return $res->withStatus(200)->write("Location {$args['id']}");
+});
+
+// run the application
+$app->run();
+````
+
+we create 2 end point `get` and `delete`  
+
+now lets run our app for first time
+````
+docker run --rm -p 3800:80 -v $(pwd)/app:/var/www/html php:7.2-apache
+````
+
+and open browser to [localhost:3800/index.php/location/12](localhost:3800/index.php/location/12)
